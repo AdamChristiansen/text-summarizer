@@ -1,8 +1,8 @@
 import argparse
-import json
 import os
 
 from utils import color as clr
+from utils import doc
 from utils import error
 from utils import fs
 from utils import text
@@ -30,15 +30,12 @@ SUMMARY_DIR = os.path.join(CORPUS_DIR, 'summary')
 # `SUMMARY_DIR` to process.
 TOPICS = fs.symmetric_dir_contents(ARTICLE_DIR, SUMMARY_DIR, dirs=True)
 
+# Create the ouput directory
+fs.make_dir(OUTPUT_DIR)
+
 #------------------------------------------------------------------------------
 # Process each file
 #------------------------------------------------------------------------------
-
-# Check the output directory, and create it if it doesn't exist
-if not os.path.exists(OUTPUT_DIR):
-    os.makedirs(OUTPUT_DIR)
-elif not os.path.isdir(OUTPUT_DIR):
-    error.error(f"`{OUTPUT_DIR}` is not a directory")
 
 # Iterate over every file to process in the corpus
 for topic in TOPICS:
@@ -55,34 +52,27 @@ for topic in TOPICS:
         outname = f"{topic}_{os.path.splitext(filename)[0]}.json"
         outfile = os.path.join(OUTPUT_DIR, outname)
 
-        # The data to save to the file
-        data = {
-            'original_article': None,
-            'original_summary': None,
-            'topic': topic,
-            'title': None,
-            'article_sentences': None,
-            'summary_sentences': None,
-        }
+        # The document to write the data to
+        document = doc.Document()
 
         # Load the article
         with open(article) as f:
             original = f.read()
-            data['original_article'] = original
+            document.orig_article = original
             lines = text.split_sentence(original)
-            data['title'] = lines[0]
-            data['article'] = lines[1:]
+            document.title = lines[0]
+            document.sent_orig_article = lines[1:]
 
         # Load the summary
         with open(summary) as f:
             original = f.read()
-            data['original_summary'] = original
-            data['summary'] = text.split_sentence(original)
+            document.orig_summary = original
+            document.sent_orig_summary = text.split_sentence(original)
 
         # Make sure that every sentence in the summary is also present in the
         # article
-        sentence_pool = set(data['article'])
-        for sentence in data['summary']:
+        sentence_pool = set(document.sent_orig_article)
+        for sentence in document.sent_orig_summary:
             if sentence not in sentence_pool:
                 print(f"Summary {clr.blu(summary)} has the sentence:")
                 print(f"    {clr.red(sentence)}")
@@ -90,5 +80,4 @@ for topic in TOPICS:
                 print()
 
         # Write the file
-        with open(outfile, 'w') as f:
-            json.dump(data, f, indent=4, sort_keys=True)
+        document.dump_file(outfile)
