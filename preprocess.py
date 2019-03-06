@@ -54,6 +54,7 @@ for topic in TOPICS:
 
         # The document to write the data to
         document = doc.Document()
+        document.topic = topic
 
         # Load the article
         with open(article) as f:
