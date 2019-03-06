@@ -1,8 +1,8 @@
 # An extractive text summarizer
 
 This is a project for the University of Lethbridge graduate level CPSC 5310
-course, Advanced Data Processing. The strategies implemented are based on the
-work of Gong and Liu.
+course, Studies in Computation Intelligence: Advanced Data Processing. The
+strategies implemented are based on the work of Gong and Liu.
 
 > Yihong Gong and Xin Liu. Generic text summarization using relevance measure
 > and latent semantic analysis.
