@@ -1,3 +1,7 @@
+"""
+This script preprocesses the corpus.
+"""
+
 import argparse
 import os
 

@@ -1,7 +1,10 @@
+"""
+This script performs summarization by latent semantic analysis.
+"""
+
 import argparse
 import os
 
-# TODO Which of these are not needed
 from utils import doc
 from utils import fs
 
@@ -10,7 +13,7 @@ from utils import fs
 #------------------------------------------------------------------------------
 
 parser = argparse.ArgumentParser(
-        description='Summarize articles using the relevance measure.')
+        description='Summarize articles using the latent semantic analysis.')
 parser.add_argument('output_dir', type=str,
         help='The directory which to write the output data')
 parser.add_argument('input_dir', type=str,
