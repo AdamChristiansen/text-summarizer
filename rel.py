@@ -7,6 +7,7 @@ import os
 
 from utils import doc
 from utils import fs
+from utils import weight
 
 #------------------------------------------------------------------------------
 # Parse command line arguments
@@ -35,8 +36,8 @@ INPUT_FILENAMES = sorted(fs.list_dir(INPUT_DIR, files=True))
 
 # TODO Get these from the command line
 # The weightings to use
-LOCAL_WEIGHT  = lambda x: x
-GLOBAL_WEIGHT = lambda x: x
+LOCAL_WEIGHT  = weight.local_builder('none', True)
+GLOBAL_WEIGHT = weight.global_builder('none')
 
 for fname in INPUT_FILENAMES:
     input_file = os.path.join(INPUT_DIR, fname)

@@ -10,6 +10,7 @@ import operator
 import numpy as np
 
 from utils import text
+from utils import weight
 
 class Document:
     """
@@ -151,10 +152,11 @@ class Document:
 
         (numpy.matrix<float>): The assembled matrix.
         """
-        bins = self.word_occurrences()
-        keys = sorted(bins.keys())
-        doc_freqs = np.array(map(lambda word: bins[word], keys))
-        return weight_func(doc_freqs)
+        # Word matrix without weighting or normalization constains all of the
+        # word frequency information needed to build the document weight
+        # vector.
+        local_weight = weight.local_builder('none', normalize=False)
+        return weight_func(self.word_matrix(local_weight))
 
     def word_matrix(self, weight_func):
         """
