@@ -14,20 +14,19 @@ strategies implemented are based on the work of Gong and Liu.
 The simple way to run the program is to open a shell and run:
 
 ```sh
-$ sh run.sh
+$ python3 run.py
 ```
 
-Alternatively, it can be run directly:
+To run everything in the execution matrix, run:
 
 ```sh
-$ chmod a+x run.sh
-$ ./run.sh
+$ python3 run.py --all
 ```
 
 All of the generated data can be removed with:
 
 ```sh
-$ ./run.sh --clean
+$ python3 run.py --clean
 ```
 
 ## Programs
@@ -37,4 +36,4 @@ The following programs are included in the root directory:
 * `lsm.py`: perform a summarization using latent semantic analysis.
 * `prep.py`: preprocess the corpus into usable data.
 * `rel.py`: perform a summarization using the relevance measure.
-* `run.sh`: run all of the other scripts in the correct order.
+* `run.py`: run all of the other scripts in the correct order.

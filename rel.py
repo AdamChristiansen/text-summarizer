@@ -19,6 +19,12 @@ parser.add_argument('output_dir', type=str,
         help='The directory which to write the output data')
 parser.add_argument('input_dir', type=str,
         help='The directory which contains the input data')
+parser.add_argument('local_weight', type=str,
+        help='The local weighting strategy to use')
+parser.add_argument('normalize', type=bool,
+        help='Indicates the local weights should be normalized')
+parser.add_argument('global_weight', type=str,
+        help='The global weighting strategy to use')
 args = parser.parse_args()
 
 # Get the command line arguments in a usable form
