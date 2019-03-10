@@ -7,6 +7,8 @@ import functools
 import json
 import operator
 
+import numpy as np
+
 from utils import text
 
 class Document:
@@ -92,7 +94,30 @@ class Document:
             cleaned.append(text.split_words(sentence))
         return cleaned
 
-    def word_occurences(self):
+    def article_sentence_word_occurrences(self):
+        """
+        Create a bin of word frequencies for every sentence in the document.
+
+        # Returns
+
+        (list<dict<str, int>>): A list of bins, where each bin represents a
+        sentence in the order that they occur in the document. The bins map
+        each word in the sentence to the number of times it occurs, therefore
+        the value of each key-value pair in the bins is guaranteed to be at
+        least 1.
+        """
+        sentence_bins = []
+        for sentence in self.article_clean_word_sentences():
+            bin = {}
+            for word in sentence:
+                if word not in bin:
+                    bin[word] = 1
+                else:
+                    bin[word] += 1
+            sentence_bins.append(bin)
+        return sentence_bins
+
+    def word_occurrences(self):
         """
         Count the occurences of every word in the cleaned document.
 
@@ -111,3 +136,80 @@ class Document:
             else:
                 bins[word] += 1
         return bins
+
+    def word_weights(self, weight_func):
+        """
+        Create a weighted array of the word document word frequencies.
+
+        # Arguments
+
+        * `weight_func` (func<a> -> a where a is np.array<int>): A weighting
+            function which accepts a term frequency array for a sentence and
+            creates a new array by weighting each term.
+
+        # Returns
+
+        (numpy.matrix<float>): The assembled matrix.
+        """
+        bins = self.word_occurrences()
+        keys = sorted(bins.keys())
+        doc_freqs = np.array(map(lambda word: bins[word], keys))
+        return weight_func(doc_freqs)
+
+    def word_matrix(self, weight_func):
+        """
+        Create a weighted matrix where the terms that occur in the document are
+        the rows and the sentence word frequency vectors are the columns.
+
+        # Arguments
+
+        * `weight_func` (func<a> -> a where a is np.array<int>): A weighting
+            function which accepts a term frequency array for a sentence and
+            creates a new array by weighting each term.
+
+        # Returns
+
+        (numpy.matrix<float>): The assembled matrix.
+        """
+        # This is sorted for consistency, and so that a binary search can be
+        # performed on it
+        doc_words = sorted(self.word_occurrences().keys())
+        def doc_words_index(word):
+            """
+            Given a word, perform a binary search on `doc_words` to find its
+            index.
+
+            # Arguments
+
+            * `word` (str): The word to search for.
+
+            # Returns
+
+            (int): The index of the word in the array.
+
+            # Raises
+
+            * (ValueError): When the word is not found.
+            """
+            min_i = 0              # Inclusive
+            max_i = len(doc_words) # Exclusive
+            while min_i < max_i:
+                mid_i = (min_i + max_i) // 2
+                if doc_words[mid_i] == word:
+                    return mid_i
+                elif doc_words[mid_i] < word:
+                    min_i = mid_i
+                else:
+                    max_i = mid_i
+            # This will never be hit, but it is there just in case
+            raise ValueError(f"Word '{word}' does not exist in document")
+        sentence_bins = self.article_sentence_word_occurrences()
+        matrix = np.zeros((len(doc_words), len(sentence_bins)))
+        for col, bin in enumerate(sentence_bins):
+            for word, count in bin.items():
+                row = doc_words_index(word)
+                matrix[row, col] = count
+        # Apply the weighting
+        for i in range(matrix.shape[1]):
+            matrix[:,i] = weight_func(matrix[:,i])
+        return matrix

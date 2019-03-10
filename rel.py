@@ -33,9 +33,28 @@ fs.make_dir(OUTPUT_DIR)
 
 INPUT_FILENAMES = sorted(fs.list_dir(INPUT_DIR, files=True))
 
+# TODO Get these from the command line
+# The weightings to use
+LOCAL_WEIGHT  = lambda x: x
+GLOBAL_WEIGHT = lambda x: x
+
 for fname in INPUT_FILENAMES:
     input_file = os.path.join(INPUT_DIR, fname)
     output_file = os.path.join(OUTPUT_DIR, fname)
+    # Prepare the file
     document = doc.Document.load_file(input_file)
-    # TODO Do the processing
+    # The global document weight vector
+    word_weights = document.word_weights(GLOBAL_WEIGHT)
+    # The words in the file as a matrix
+    word_matrix = document.word_matrix(LOCAL_WEIGHT)
+    # Take the appropriate inner product for the sentences
+    # TODO
+    # Sort the sentences by maximum relevancy score
+    # TODO
+    # Determine the number of sentences to include in the summary
+    # TODO
+    # Pick the sentences for the summary
+    # TODO
+    # Write back the summary to the document
+    # TODO
     document.dump_file(output_file)

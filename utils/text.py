@@ -93,7 +93,7 @@ def split_words(s, rstrip=RSTRIP, clean=CLEAN):
             old_word = word
             for c in clean:
                 word = word.replace(c, '')
-    words = words.map(clean_func, words)
+    words = map(clean_func, words)
     # Filter out empty words
     return list(filter(lambda w: w, words))
 
