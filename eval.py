@@ -35,9 +35,18 @@ fs.make_dir(os.path.dirname(OUTPUT_FILE))
 
 RESULTS = []
 
-def evaluate(strategy, fname):
+def evaluate(fname, strategy):
     """
-    TODO Docs
+    Evaluate the results for a single summary.
+
+    # Arguments
+
+    * `fname` (str): The path to the summary file to evaluate.
+    * `strategy` (str): A description of the summarization strategy.
+
+    # Returns
+
+    (dict<str, object>): The evaluation results.
     """
     document = doc.Document.load_file(fname)
     # Make sure that every sentence in the summary is also in the article
@@ -72,7 +81,7 @@ for dir in INPUT_SUBDIRS:
     strategy = os.path.basename(dir)
     for fname in INPUT_FILENAMES:
         input_file = os.path.join(INPUT_DIR, fname)
-        result = evaluate(strategy, input_file)
+        result = evaluate(input_file, strategy)
         RESULTS.append(result)
 
 with open(OUTPUT_FILE, 'w') as f:
