@@ -14,12 +14,12 @@ import os
 from utils import color as clr
 
 # The relative directories where everything is stored.
-CORPUS_DIR = os.path.abspath("corpus/")
-OUT_DIR    = os.path.abspath("result/")
-PREP_DIR   = os.path.abspath("prep/")
+CORPUS_DIR = os.path.abspath("corpus")
+OUT_DIR    = os.path.abspath("output")
+PREP_DIR   = os.path.abspath("prep")
 
 # The names of programs
-LSM_NAME  = "lsm"
+LSA_NAME  = "lsa"
 PREP_NAME = "prep"
 REL_NAME  = "rel"
 
@@ -64,6 +64,13 @@ def prep():
     """
     run_cmd(['python3', f'{PREP_NAME}.py', PREP_DIR, CORPUS_DIR])
 
+def lsa():
+    """
+    Run the latent semantic analysis program.
+    """
+    outdir=os.path.join(OUT_DIR, LSA_NAME)
+    run_cmd(['python3', f'{LSA_NAME}.py', outdir, PREP_DIR])
+
 def rel():
     """
     Run the relevance measure program.
@@ -74,16 +81,10 @@ def rel():
         run_cmd(['python3', f'{REL_NAME}.py', outdir, PREP_DIR, lw, norm, gw])
         if not args.all:
             break
-def lsm():
-    """
-    Run the latent semantic analysis program.
-    """
-    outdir=os.path.join(OUT_DIR, LSM_NAME)
-    run_cmd(['python3', f'{LSM_NAME}.py', outdir, PREP_DIR])
 
 if args.clean:
     clean()
-else:
-    prep()
-    rel()
-    lsm()
+
+prep()
+lsa()
+rel()

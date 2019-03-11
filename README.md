@@ -33,7 +33,7 @@ $ python3 run.py --clean
 
 The following programs are included in the root directory:
 
-* `lsm.py`: perform a summarization using latent semantic analysis.
+* `lsa.py`: perform a summarization using latent semantic analysis.
 * `prep.py`: preprocess the corpus into usable data.
 * `rel.py`: perform a summarization using the relevance measure.
 * `run.py`: run all of the other scripts in the correct order.
