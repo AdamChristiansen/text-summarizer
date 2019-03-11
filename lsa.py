@@ -32,6 +32,9 @@ OUTPUT_DIR   = os.path.abspath(args.output_dir)
 INPUT_DIR    = os.path.abspath(args.input_dir)
 LOCAL_WEIGHT = weight.local_builder(args.local_weight, args.normalize)
 
+# A description of the summarization strategy
+STRATEGY = "LSA[lw={},norm={}]".format(args.local_weight, args.normalize)
+
 # Create the ouput directory
 fs.make_dir(OUTPUT_DIR)
 
@@ -73,5 +76,6 @@ for fname in INPUT_FILENAMES:
     document = doc.Document.load_file(input_file)
     # Summarize the document in place
     summarize(document)
+    document.summary_strategy = STRATEGY
     # Write the generated document to the output location
     document.dump_file(output_file)

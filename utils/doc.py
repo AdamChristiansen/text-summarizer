@@ -20,7 +20,8 @@ class Document:
 
     def __init__(self, orig_article=None, orig_summary=None,
             sent_gen_summary=None, sent_orig_article=None,
-            sent_orig_summary=None, title=None, topic=None):
+            sent_orig_summary=None, summary_strategy=None, title=None,
+            topic=None):
         """
         Create an object consisting of the components of a document.
 
@@ -34,6 +35,8 @@ class Document:
             article.
         * `sent_orig_summary` (list<str>): The sentences in the original
             summary.
+        * `summary_strategy` (str): A description of the summarization
+            strategy.
         * `title` (str): The title of the article.
         * `topic` (str): The topic of the article.
         """
@@ -42,6 +45,7 @@ class Document:
         self.sent_gen_summary  = sent_gen_summary
         self.sent_orig_article = sent_orig_article
         self.sent_orig_summary = sent_orig_summary
+        self.summary_strategy  = summary_strategy
         self.title             = title
         self.topic             = topic
 
@@ -75,6 +79,7 @@ class Document:
             'sent_gen_summary':  self.sent_gen_summary,
             'sent_orig_article': self.sent_orig_article,
             'sent_orig_summary': self.sent_orig_summary,
+            'summary_strategy':  self.summary_strategy,
             'title':             self.title,
             'topic':             self.topic,
         }

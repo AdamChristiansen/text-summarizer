@@ -67,7 +67,7 @@ def evaluate(fname, strategy):
         'file': fname,
         'p': p,
         'r': r,
-        'strategy': strategy,
+        'strategy': document.summary_strategy,
         'topic': document.topic,
     }
 
