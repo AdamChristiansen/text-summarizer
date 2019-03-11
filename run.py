@@ -68,8 +68,11 @@ def lsa():
     """
     Run the latent semantic analysis program.
     """
-    outdir=os.path.join(OUT_DIR, LSA_NAME)
-    run_cmd(['python3', f'{LSA_NAME}.py', outdir, PREP_DIR])
+    for lw, norm in itertools.product(LOCAL_WEIGHTS, NORMALIZATIONS):
+        outdir=os.path.join(OUT_DIR, f"{LSA_NAME}-{lw}-{norm}")
+        run_cmd(['python3', f'{LSA_NAME}.py', outdir, PREP_DIR, lw, norm])
+        if not args.all:
+            break
 
 def rel():
     """

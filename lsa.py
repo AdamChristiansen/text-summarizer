@@ -21,11 +21,16 @@ parser.add_argument('output_dir', type=str,
         help='The directory which to write the output data')
 parser.add_argument('input_dir', type=str,
         help='The directory which contains the input data')
+parser.add_argument('local_weight', type=str,
+        help='The local weighting strategy to use')
+parser.add_argument('normalize', type=bool,
+        help='Indicates the local weights should be normalized')
 args = parser.parse_args()
 
 # Get the command line arguments in a usable form
-OUTPUT_DIR = os.path.abspath(args.output_dir)
-INPUT_DIR  = os.path.abspath(args.input_dir)
+OUTPUT_DIR   = os.path.abspath(args.output_dir)
+INPUT_DIR    = os.path.abspath(args.input_dir)
+LOCAL_WEIGHT = weight.local_builder(args.local_weight, args.normalize)
 
 # Create the ouput directory
 fs.make_dir(OUTPUT_DIR)
@@ -35,10 +40,6 @@ fs.make_dir(OUTPUT_DIR)
 #------------------------------------------------------------------------------
 
 INPUT_FILENAMES = sorted(fs.list_dir(INPUT_DIR, files=True))
-
-# The weighting function to use for building the matrix is the default with no
-# weighting or normalization.
-LOCAL_WEIGHT = weight.local_builder('none', normalize=False)
 
 def summarize(document):
     """
@@ -62,7 +63,6 @@ def summarize(document):
             if j not in summary_indices:
                 summary_indices.append(j)
                 break
-    print(summary_indices)
     # Set the summary in the document
     document.set_summary(summary_indices)
 
