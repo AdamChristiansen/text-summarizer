@@ -78,7 +78,6 @@ def summarize(document):
             if matrix[i, max_index]:
                 matrix[i,:] = 0
     # Set the summary in the document
-    print(summary_indices)
     document.set_summary(summary_indices)
 
 for fname in INPUT_FILENAMES:
