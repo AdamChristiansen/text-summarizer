@@ -215,3 +215,27 @@ class Document:
         for i in range(matrix.shape[1]):
             matrix[:,i] = weight_func(matrix[:,i])
         return matrix
+
+    def set_summary(self, indices):
+        """
+        Set the generated summary based on sentence indices.
+
+        # Arguments
+
+        * `indices` (list<int>): The sentence indices to include in the
+            summary.
+        """
+        self.sent_gen_summary = []
+        for i in indices:
+            self.sent_gen_summary.append(self.sent_orig_article[i])
+
+    def summary_size(self):
+        """
+        The number of sentences in the original summary. This serves as the
+        number of sentences to pick for the generated summary.
+
+        # Returns
+
+        (int): The number of sentences.
+        """
+        return len(self.sent_orig_summary)

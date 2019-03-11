@@ -25,7 +25,7 @@ REL_NAME  = "rel"
 
 # The names of weighting options
 GLOBAL_WEIGHTS = ["none", "inverse"]
-LOCAL_WEIGHTS  = ["none", "binary", "augmented", "logarithmic"]
+LOCAL_WEIGHTS  = ["none", "binary", "augmented", "logarithm"]
 NORMALIZATIONS = ["false", "true"]
 
 # Parse the command line arguments
@@ -45,7 +45,7 @@ def run_cmd(cmd):
 
     * `cmd` (list<str>): A list containing a command and its arguments.
     """
-    print("{} {}".format(clr.yel('RUNNING'), clr.cyn(' '.join(cmd))))
+    print(f"{clr.yel('RUNNING')} {' '.join(cmd)}")
     subprocess.call(cmd)
 
 def clean():
@@ -53,7 +53,7 @@ def clean():
     Clean the program outputs.
     """
     def rmdirectory(path):
-        print("{} {}".format(clr.yel('DELETING'), clr.cyn(path)))
+        print(f"{clr.yel('DELETING')} {path}")
         shutil.rmtree(path, ignore_errors=True)
     rmdirectory(PREP_DIR)
     rmdirectory(OUT_DIR)
@@ -84,7 +84,7 @@ def rel():
 
 if args.clean:
     clean()
-
-prep()
-lsa()
-rel()
+else:
+    prep()
+    lsa()
+    rel()
