@@ -62,7 +62,7 @@ def __search_key(files, dirs, hidden):
         return include_file or include_dir or include_hidden
     return key
 
-def list_dir(path, files=False, dirs=False, hidden=False):
+def list_dir(path, files=False, dirs=False, hidden=False, full=False):
     """
     List the contents of a directory.
 
@@ -72,6 +72,7 @@ def list_dir(path, files=False, dirs=False, hidden=False):
     * `files` (bool): Indicates that files should be returned.
     * `dirs` (bool): Indicates that directories should be returned.
     * `hidden` (bool): Indicates that hidden items should be returned.
+    * `full` (bool): Indicates that absolute path should be returned.
 
     # Returns
 
@@ -83,6 +84,8 @@ def list_dir(path, files=False, dirs=False, hidden=False):
     for fname in os.listdir(path):
         if key(path, fname):
             items.append(fname)
+    if full:
+        items = map(lambda x: os.path.join(path, x), items)
     return set(items)
 
 def symmetric_dir_contents(d1_path, d2_path, files=False, dirs=False,

@@ -17,10 +17,10 @@ The simple way to run the program is to open a shell and run:
 $ python3 run.py
 ```
 
-To run everything in the execution matrix, run:
+which is equivalent to:
 
 ```sh
-$ python3 run.py --all
+$ python3 runp.py --prep --summarize --eval
 ```
 
 All of the generated data can be removed with:
@@ -33,6 +33,7 @@ $ python3 run.py --clean
 
 The following programs are included in the root directory:
 
+* `eval.py`: evaluate summarization results.
 * `lsa.py`: perform a summarization using latent semantic analysis.
 * `prep.py`: preprocess the corpus into usable data.
 * `rel.py`: perform a summarization using the relevance measure.
