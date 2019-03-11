@@ -39,7 +39,7 @@ parser.add_argument('--eval', action='store_true',
         help="Run the evaluation.")
 parser.add_argument('--prep', action='store_true',
         help="Run the preparation.")
-parser.add_argument('--summarize', action='store_true',
+parser.add_argument('--summary', action='store_true',
         help="Run the summarization.")
 args = parser.parse_args()
 
@@ -102,7 +102,7 @@ else:
     # If no areguments are given then run everything, otherwise only run
     # specific parts
     RUN_PREP = args.prep
-    RUN_SUMM = args.summarize
+    RUN_SUMM = args.summary
     RUN_EVAL = args.eval
     if not any([RUN_PREP, RUN_SUMM, RUN_EVAL]):
         RUN_PREP = True
