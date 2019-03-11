@@ -45,7 +45,7 @@ def run_cmd(cmd):
 
     * `cmd` (list<str>): A list containing a command and its arguments.
     """
-    print(f"{clr.yel('RUNNING')} {' '.join(cmd)}")
+    print(f"{clr.cyn('RUNNING')} {' '.join(cmd)}")
     subprocess.call(cmd)
 
 def clean():
@@ -53,7 +53,7 @@ def clean():
     Clean the program outputs.
     """
     def rmdirectory(path):
-        print(f"{clr.yel('DELETING')} {path}")
+        print(f"{clr.cyn('DELETING')} {path}")
         shutil.rmtree(path, ignore_errors=True)
     rmdirectory(PREP_DIR)
     rmdirectory(OUT_DIR)

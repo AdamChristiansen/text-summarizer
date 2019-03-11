@@ -9,6 +9,7 @@ import operator
 
 import numpy as np
 
+from utils import error
 from utils import text
 from utils import weight
 
@@ -225,6 +226,9 @@ class Document:
         * `indices` (list<int>): The sentence indices to include in the
             summary.
         """
+        if len(set(indices)) != len(indices):
+            error.error(f'Summary generated for "{self.title}" produced duplicate sentences',
+                    warning=True)
         self.sent_gen_summary = []
         for i in indices:
             self.sent_gen_summary.append(self.sent_orig_article[i])

@@ -50,7 +50,7 @@ def summarize(document):
 
     # Arguments
 
-    * `document (Document): The cocument to summarize.
+    * `document (Document): The document to summarize.
     """
     # The global document weight vector and words in the file as a matrix
     weights = document.word_weights(GLOBAL_WEIGHT)
