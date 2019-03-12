@@ -60,6 +60,13 @@ def summarize(document):
     weights = document.word_weights(GLOBAL_WEIGHT)
     matrix = document.word_matrix(LOCAL_WEIGHT)
 
+    # A non-normalized binary reference matrix is used to determine if a word
+    # is in a sentence. If a word is in a sentence its value is 1, otherwise it
+    # is 0. This is used to check term membership because some weightings set
+    # every term to be greater than 0, so a simple check cannot be used with
+    # those like they can with binary weights.
+    ref_matrix = document.word_matrix(weight.local_builder('binary', False))
+
     summary_indices = []
     for n in range(document.summary_size()):
         # Find the highest ranking sentence by iterating over the matrix
@@ -76,11 +83,13 @@ def summarize(document):
         summary_indices.append(max_index)
         # Remove all occurrences of words in the selected sentence from all
         # other sentences. This is done by iterating over the rows of the
-        # matrix, and if the selected sentence is non-zero in that row,
-        # set the entire row to 0.
+        # reference matrix, and if the selected sentence is non-zero in that
+        # row, set the entire row to 0.
         for i in range(matrix.shape[0]):
-            if matrix[i, max_index]:
+            if ref_matrix[i, max_index]:
                 matrix[i,:] = 0
+        # Also set the entire sentence to 0 so it is not considered again
+        matrix[:,max_index] = 0
     # Set the summary in the document
     document.set_summary(summary_indices)
 
