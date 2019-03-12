@@ -182,7 +182,7 @@ def results_by_topic():
     results = sorted(results.items(), key=lambda x: x[1], reverse=True)
     print_heading("Topic Ranking")
     for topic, f in results:
-        print_pair("strat", strategy, "f", f)
+        print_pair("topic", topic, "f", f)
 
 def results_best_worst_individual(key=lambda x: x['f'], size=5):
     """
