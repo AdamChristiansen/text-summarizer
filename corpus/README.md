@@ -20,5 +20,15 @@ The documents and data set structure were slightly modified. The changes are:
   appears in a summary also appears in its respective article in exactly the
   same way.
 
+The corpus is set up so that the path for a document is
+`<type>/<topic>/<document>`, where:
+
+* `<type>` is `article` or `summary`
+* `<topic>` is the topic that the article-summary pair belongs to
+* `<document>` is the name of the document
+
+Using this convention, every article has a corresponding summary, so
+`article/tech/001.txt` has its summary stored in `summary/tech/001.txt`.
+
 [1]: https://www.kaggle.com/pariza/bbc-news-summary
 [2]: https://creativecommons.org/publicdomain/zero/1.0/
