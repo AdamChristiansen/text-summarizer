@@ -9,6 +9,7 @@ import numpy as np
 
 from utils import doc
 from utils import fs
+from utils import misc
 from utils import weight
 
 #------------------------------------------------------------------------------
@@ -23,7 +24,7 @@ parser.add_argument('input_dir', type=str,
         help='The directory which contains the input data')
 parser.add_argument('local_weight', type=str,
         help='The local weighting strategy to use')
-parser.add_argument('normalize', type=bool,
+parser.add_argument('normalize', type=misc.str_to_bool,
         help='Indicates the local weights should be normalized')
 parser.add_argument('global_weight', type=str,
         help='The global weighting strategy to use')
@@ -36,8 +37,8 @@ LOCAL_WEIGHT  = weight.local_builder(args.local_weight, args.normalize)
 GLOBAL_WEIGHT = weight.global_builder(args.global_weight)
 
 # A description of the summarization strategy
-STRATEGY = "REL[lw={},norm={},gw={}]".format(args.local_weight, args.normalize,
-            args.global_weight)
+STRATEGY = "REL_{{{}{}{}}}".format(args.local_weight[0].upper(),
+    int(args.normalize), args.global_weight[0].upper())
 
 # Create the ouput directory
 fs.make_dir(OUTPUT_DIR)

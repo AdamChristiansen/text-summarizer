@@ -92,8 +92,7 @@ def run_eval():
     """
     Run the evaluation program.
     """
-    outfile = os.path.join(EVAL_DIR, f"{EVAL_NAME}.json")
-    run_cmd(['python3', f'{EVAL_NAME}.py', outfile, SUMM_DIR])
+    run_cmd(['python3', f'{EVAL_NAME}.py', EVAL_DIR, SUMM_DIR])
 
 
 if args.clean:

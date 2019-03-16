@@ -1,5 +1,6 @@
 # Generated files
 *.json
+*.png
 
 # macOS
 .DS_Store

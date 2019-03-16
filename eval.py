@@ -8,11 +8,17 @@ import collections
 import json
 import os
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from utils import color as clr
 from utils import doc
 from utils import fs
+
+# Configure plots
+plt.rcParams["font.size"]   = 11
+plt.rcParams["text.usetex"] = True
+plt.rcParams['figure.figsize'] = 5, 3
 
 #------------------------------------------------------------------------------
 # Parse command line arguments
@@ -20,18 +26,18 @@ from utils import fs
 
 parser = argparse.ArgumentParser(
         description='Summarize articles using the latent semantic analysis.')
-parser.add_argument('output_file', type=str,
-        help='The file which to write the output data')
+parser.add_argument('output_dir', type=str,
+        help='The directory which to write the output data')
 parser.add_argument('input_dir', type=str,
         help='The directory which contains the input data')
 args = parser.parse_args()
 
 # Get the command line arguments in a usable form
-OUTPUT_FILE = os.path.abspath(args.output_file)
-INPUT_DIR   = os.path.abspath(args.input_dir)
+OUTPUT_DIR = os.path.abspath(args.output_dir)
+INPUT_DIR  = os.path.abspath(args.input_dir)
 
 # Create the ouput directory
-fs.make_dir(os.path.dirname(OUTPUT_FILE))
+fs.make_dir(OUTPUT_DIR)
 
 #------------------------------------------------------------------------------
 # Process the data
@@ -88,7 +94,7 @@ for dir in INPUT_SUBDIRS:
         result = evaluate(input_file, strategy)
         RESULTS.append(result)
 
-with open(OUTPUT_FILE, 'w') as f:
+with open(os.path.join(OUTPUT_DIR, "results.json"), 'w') as f:
     json.dump(RESULTS, f, indent=2, sort_keys=True)
 
 #------------------------------------------------------------------------------
@@ -116,11 +122,11 @@ def print_entry(e):
 
     * `e` (dict): The entry.
     """
-    print("strat={:40} topic={:14} doc={:25} p={:5.3f} r={:5.3f} f={:5.3f}"
+    print("strat={:10} topic={:14} doc={:25} p={:5.3f} r={:5.3f} f={:5.3f}"
         .format(e['strategy'], e['topic'], os.path.basename(e['file']), e['p'],
             e['r'], e['f']))
 
-def print_pair(kn, kv, vn, vv, kw='40', vw='5.3f'):
+def print_pair(kn, kv, vn, vv, kw='20', vw='5.3f'):
     """
     Print a key-value pair.
 
@@ -164,6 +170,38 @@ def group_reduce(f_agg, f_red, xs):
         r[k] = f_red(vs)
     return r
 
+def plot_results(filename, xs, ys, bottom=0, plot_func=plt.bar,
+        rotate_label=False, title=None, xlabel=None, ylabel=None):
+    """
+    Create a plot of the results and save it to a file.
+
+    # Arguments
+
+    * `filename` (str): The file to save the plot to.
+    * `xs` (list_like<obj>): The x data.
+    * `ys` (list_like<obj>): The y data.
+    * `bottom` (float): The relative offset for the bottom of the plot.
+    * `plot_func` (func<a, a> where a is list_like<obj>): A function that
+        series of x and y data, respectively, and creates a plot.
+    * `rotate_labels` (bool): Indicates that the x labels should be rotated 90
+        degrees.
+    * `title` (None|str): The plot title, if specified.
+    * `xlabel` (None|str): The x label title, if specified.
+    * `ylabel` (None|str): The y label title, if specified.
+    """
+    plt.clf()
+    plot_func(xs, ys)
+    plt.subplots_adjust(bottom=bottom)
+    if rotate_label:
+        plt.xticks(xs, xs, rotation=90)
+    if title is not None:
+        plt.title(title)
+    if xlabel is not None:
+        plt.xlabel(xlabel)
+    if ylabel is not None:
+        plt.ylabel(ylabel)
+    plt.savefig(os.path.join(OUTPUT_DIR, filename), dpi=300)
+
 def results_by_strategy():
     """
     Report the results of different strategies.
@@ -171,8 +209,14 @@ def results_by_strategy():
     results = group_reduce(lambda x: x['strategy'], lambda xs: np.mean(list(map(lambda x: x['f'], xs))), RESULTS)
     results = sorted(results.items(), key=lambda x: x[1], reverse=True)
     print_heading("Strategy Ranking")
+    strategies, fs = [], []
     for strategy, f in results:
         print_pair("strat", strategy, "f", f)
+        strategies.append(strategy)
+        fs.append(f)
+    strategies = list(map(lambda s: f"${s}$", strategies))
+    plot_results('strategy.png', strategies, fs, bottom=0.25,
+        rotate_label=True, xlabel="Strategy", ylabel="$F$")
 
 def results_by_topic():
     """
@@ -181,8 +225,13 @@ def results_by_topic():
     results = group_reduce(lambda x: x['topic'], lambda xs: np.mean(list(map(lambda x: x['f'], xs))), RESULTS)
     results = sorted(results.items(), key=lambda x: x[1], reverse=True)
     print_heading("Topic Ranking")
+    topics, fs = [], []
     for topic, f in results:
         print_pair("topic", topic, "f", f)
+        topics.append(topic)
+        fs.append(f)
+    plot_results('topic.png', topics, fs, bottom=0.15, xlabel="Topic",
+        ylabel="$F$")
 
 def results_best_worst_individual(key=lambda x: x['f'], size=5):
     """
@@ -203,6 +252,12 @@ def results_best_worst_individual(key=lambda x: x['f'], size=5):
     print_heading("Worst Individual")
     for e in worst:
         print_entry(e)
+    # Create a histogram of the results
+    fs = []
+    for r in s:
+        fs.append(r['f'])
+    plot_results('individual.png', None, fs, bottom=0.15,
+        plot_func=lambda xs, ys: plt.hist(ys), xlabel="$F$", ylabel="Count")
 
 # Run all of the procedures
 results_by_strategy()
