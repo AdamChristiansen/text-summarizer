@@ -18,7 +18,7 @@ from utils import fs
 # Configure plots
 plt.rcParams["font.size"]   = 11
 plt.rcParams["text.usetex"] = True
-plt.rcParams['figure.figsize'] = 5, 3
+plt.rcParams['figure.figsize'] = 5, 2.5
 
 #------------------------------------------------------------------------------
 # Parse command line arguments
@@ -200,7 +200,7 @@ def plot_results(filename, xs, ys, bottom=0, plot_func=plt.bar,
         plt.xlabel(xlabel)
     if ylabel is not None:
         plt.ylabel(ylabel)
-    plt.savefig(os.path.join(OUTPUT_DIR, filename), dpi=300)
+    plt.savefig(os.path.join(OUTPUT_DIR, filename), dpi=600)
 
 def results_by_strategy():
     """
@@ -214,9 +214,9 @@ def results_by_strategy():
         print_pair("strat", strategy, "f", f)
         strategies.append(strategy)
         fs.append(f)
-    strategies = list(map(lambda s: f"${s}$", strategies))
-    plot_results('strategy.png', strategies, fs, bottom=0.25,
-        rotate_label=True, xlabel="Strategy", ylabel="$F$")
+    strategies = list(map(lambda s: f"$\\mathrm{{{s}}}$", strategies))
+    plot_results('strategy.png', strategies, fs, bottom=0.35,
+        rotate_label=True, xlabel="Configuration", ylabel="$F$")
 
 def results_by_topic():
     """
@@ -230,7 +230,7 @@ def results_by_topic():
         print_pair("topic", topic, "f", f)
         topics.append(topic)
         fs.append(f)
-    plot_results('topic.png', topics, fs, bottom=0.15, xlabel="Topic",
+    plot_results('topic.png', topics, fs, bottom=0.20, xlabel="Topic",
         ylabel="$F$")
 
 def results_best_worst_individual(key=lambda x: x['f'], size=5):
@@ -256,8 +256,8 @@ def results_best_worst_individual(key=lambda x: x['f'], size=5):
     fs = []
     for r in s:
         fs.append(r['f'])
-    plot_results('individual.png', None, fs, bottom=0.15,
-        plot_func=lambda xs, ys: plt.hist(ys), xlabel="$F$", ylabel="Count")
+    plot_results('individual.png', None, fs, bottom=0.20,
+        plot_func=lambda xs, ys: plt.hist(ys, bins=20), xlabel="$F$", ylabel="Count")
 
 # Run all of the procedures
 results_by_strategy()
