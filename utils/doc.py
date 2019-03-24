@@ -144,25 +144,45 @@ class Document:
                 bins[word] += 1
         return bins
 
-    def word_weights(self, weight_func):
+    def word_weights(self, weight_func, exclude):
         """
-        Create a weighted array of the word document word frequencies.
+        Create a weighted array of the word document word frequencies. The
+        excluded sentences are not considered in the computation, but the shape
+        of the returned value is not affected. The excluded sentences will
+        simply have a 0 weighting in the result.
 
         # Arguments
 
         * `weight_func` (func<a> -> a where a is np.array<int>): A weighting
             function which accepts a term frequency array for a sentence and
             creates a new array by weighting each term.
+        * `exclude` (list<int>): A list of sentence indices to exclude from
+            the computation.
 
         # Returns
 
-        (numpy.matrix<float>): The assembled matrix.
+        (numpy.array<float>): The assembled matrix.
         """
         # Word matrix without weighting or normalization constains all of the
         # word frequency information needed to build the document weight
         # vector.
         local_weight = weight.local_builder('none', normalize=False)
-        return weight_func(self.word_matrix(local_weight))
+        matrix = self.word_matrix(local_weight)
+        # The number of sentences in the result
+        size = matrix.shape[0]
+        matrix = np.delete(matrix, exclude, axis=0)
+        # The computed weights `ws` has the wrong shape, so it needs to be
+        # restored
+        ws = weight_func(matrix)
+        weights = np.zeros(size)
+        j = 0
+        for i in range(size):
+            if i in exclude:
+                weights[i] = 0
+            else:
+                weights[i] = ws[j]
+                j += 1
+        return weights
 
     def word_matrix(self, weight_func):
         """

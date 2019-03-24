@@ -57,8 +57,7 @@ def summarize(document):
 
     * `document (Document): The document to summarize.
     """
-    # The global document weight vector and words in the file as a matrix
-    weights = document.word_weights(GLOBAL_WEIGHT)
+    # Get the words in the file as a matrix
     matrix = document.word_matrix(LOCAL_WEIGHT)
 
     # A non-normalized binary reference matrix is used to determine if a word
@@ -70,6 +69,9 @@ def summarize(document):
 
     summary_indices = []
     for n in range(document.summary_size()):
+        # The weights must be computed after each iteration because terms are
+        # removed from the document.
+        weights = document.word_weights(GLOBAL_WEIGHT, summary_indices)
         # Find the highest ranking sentence by iterating over the matrix
         # columns (sentences) and computing a ranking. The index of the highest
         # ranking sentence is chosen.
