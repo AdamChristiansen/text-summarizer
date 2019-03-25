@@ -134,7 +134,10 @@ def __global_inverse(word_matrix):
     n = word_matrix.shape[1] # The number of sentences
     for i in range(len(ys)):
         ni = np.count_nonzero(word_matrix[i,:])
-        ys[i] = np.log(n / ni)
+        if ni > 0:
+            ys[i] = np.log(n / ni)
+        else:
+            ys[i] = 0
     return ys
 
 

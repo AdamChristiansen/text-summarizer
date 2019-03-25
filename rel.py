@@ -71,7 +71,7 @@ def summarize(document):
     for n in range(document.summary_size()):
         # The weights must be computed after each iteration because terms are
         # removed from the document.
-        weights = document.word_weights(GLOBAL_WEIGHT, summary_indices)
+        weights = document.word_weights(GLOBAL_WEIGHT, summary_indices, matrix)
         # Find the highest ranking sentence by iterating over the matrix
         # columns (sentences) and computing a ranking. The index of the highest
         # ranking sentence is chosen.
