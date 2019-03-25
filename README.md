@@ -29,6 +29,12 @@ All of the generated data can be removed with:
 $ python3 run.py --clean
 ```
 
+## Dependencies
+
+* Python 3
+  * `numpy`
+  * `matplotlib`
+
 ## Programs
 
 The following programs are included in the root directory:
